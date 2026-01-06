@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CanvasWrapper.jsx</title>
+</head>
+
+<body>
+  <h1>CanvasWrapper.jsx</h1>
+  <p>
+  <pre>
+     <code>
+import { useEffect, useRef } from 'react'
+import { Canvas, useThree } from '@react-three/fiber'
+import { OrbitControls, PerspectiveCamera, Environment } from '@react-three/drei'
+import Room from './Room.jsx'
+import { useStore } from './store.js'
+import gsap from 'gsap' // Убедитесь, что gsap установлен: npm install gsap
+
+// --- Умный контроллер камеры ---
+function CameraController() {
+const { camera } = useThree()
+const controlsRef = useRef()
+
+const cameraView = useStore((s) => s.cameraView)
+const setCameraView = useStore((s) => s.setCameraView)
+
+// Эффект: при изменении cameraView (по клику в меню) двигаем камеру
+useEffect(() => {
+if (!controlsRef.current) return
+if (cameraView === 'free') return // Если нажали Free, просто оставляем как есть (или возвращаем в дефолт)
+
+const duration = 1 // сек
+
+// Целевые координаты
+let targetPos = { x: 3, y: 3, z: 4 }
+// Вращение мы не анимируем напрямую, т.к. OrbitControls управляет камерой через target
+// Мы просто ставим камеру в точку, а target в 0,0,0
+
+switch (cameraView) {
+case 'front': targetPos = { x: 0, y: 1.5, z: 5 }; break;
+case 'top': targetPos = { x: 0, y: 6, z: 0 }; break;
+case 'left': targetPos = { x: -5, y: 1.5, z: 0 }; break;
+case 'right': targetPos = { x: 5, y: 1.5, z: 0 }; break;
+case 'free': default: targetPos = { x: 3, y: 3, z: 4 }; break;
+}
+
+// Анимация позиции
+gsap.to(camera.position, {
+x: targetPos.x,
+y: targetPos.y,
+z: targetPos.z,
+duration,
+onUpdate: () => controlsRef.current.update() // Важно обновлять контроли
+})
+
+}, [cameraView, camera])
+
+return (
+<OrbitControls ref={controlsRef} makeDefault // Когда юзер начинает крутить сам -> сбрасываем в 'free'
+  onStart={() => {
+  if (cameraView !== 'free') setCameraView('free')
+  }}
+  />
+  )
+  }
+  // ------------------------------
+
+  export default function CanvasWrapper() {
+  return (
+  <div style={{ width: '100vw' , height: '100vh' , position: 'fixed' , top: 0, left: 0, zIndex: 0 }}>
+    <Canvas shadows dpr={[1, 2]}>
+      <PerspectiveCamera makeDefault position={[3, 3, 4]} fov={50} />
+
+      {/* Наш умный контроллер */}
+      <CameraController />
+
+      <ambientLight intensity={0.7} />
+      <pointLight position={[10, 10, 10]} intensity={1} castShadow />
+      <Environment preset="city" />
+
+      <Room />
+    </Canvas>
+  </div>
+  )
+  }
+  </code>
+</pre>
+  </p>
+</body>
+
+</html>
