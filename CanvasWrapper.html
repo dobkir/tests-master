@@ -12,6 +12,20 @@
   <p>
   <pre>
      <code>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CanvasWrapper.jsx</title>
+</head>
+
+<body>
+  <h1>CanvasWrapper.jsx</h1>
+  <p>
+  <pre>
+     <code>
 import { useEffect, useRef } from 'react'
 import { Canvas, useThree } from '@react-three/fiber'
 import { OrbitControls, PerspectiveCamera, Environment } from '@react-three/drei'
@@ -59,7 +73,7 @@ onUpdate: () => controlsRef.current.update() // Важно обновлять к
 }, [cameraView, camera])
 
 return (
-<OrbitControls ref={controlsRef} makeDefault // Когда юзер начинает крутить сам -> сбрасываем в 'free'
+&lt;OrbitControls ref={controlsRef} makeDefault // Когда юзер начинает крутить сам -> сбрасываем в 'free'
   onStart={() => {
   if (cameraView !== 'free') setCameraView('free')
   }}
@@ -70,20 +84,28 @@ return (
 
   export default function CanvasWrapper() {
   return (
-  <div style={{ width: '100vw' , height: '100vh' , position: 'fixed' , top: 0, left: 0, zIndex: 0 }}>
-    <Canvas shadows dpr={[1, 2]}>
-      <PerspectiveCamera makeDefault position={[3, 3, 4]} fov={50} />
+  &lt;div style={{ width: '100vw' , height: '100vh' , position: 'fixed' , top: 0, left: 0, zIndex: 0 }}>
+    &lt;Canvas shadows dpr={[1, 2]}>
+      &lt;PerspectiveCamera makeDefault position={[3, 3, 4]} fov={50} />
 
       {/* Наш умный контроллер */}
-      <CameraController />
+      &lt;CameraController />
 
-      <ambientLight intensity={0.7} />
-      <pointLight position={[10, 10, 10]} intensity={1} castShadow />
-      <Environment preset="city" />
+      &lt;ambientLight intensity={0.7} />
+      &lt;pointLight position={[10, 10, 10]} intensity={1} castShadow />
+      &lt;Environment preset="city" />
 
-      <Room />
-    </Canvas>
-  </div>
+      &lt;Room />
+    &lt;/Canvas>
+  &lt;/div>
+  )
+  }
+  </code>
+</pre>
+  </p>
+</body>
+
+</html>
   )
   }
   </code>
