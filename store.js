@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App.jsx</title>
+</head>
+
+<body>
+  <h1>App.jsx</h1>
+  <p>
+  <pre>
+     <code>
+    import { create } from 'zustand'
+    
+    export const useStore = create((set) => ({
+    // Мебель (пока пусто)
+    furniture: [],
+    addFurniture: (type) => set((state) => ({
+    furniture: [ ...state.furniture, { id: Date.now(), type, position: [0,0,0], rotation: [0,0,0] } ]
+    })),
+    
+    // Параметры комнаты
+    room: {
+    height: 2.5,
+    width: 3.0,
+    depth: 1.5,
+    displayMode: 'textured',
+    wallTexture: null,
+    wallColor: '#e0e0e0',
+    floorTexture: null,
+    floorColor: '#f0f0f0',
+    useWallTexture: false,
+    useFloorTexture: false,
+    wallOpacity: 0.3,
+    floorOpacity: 0.3,
+    gridSpacing: 0.5,
+    },
+    
+    // --- НОВОЕ: Состояние вида камеры ---
+    cameraView: 'free', // 'front', 'top', 'left', 'right', 'free'
+    setCameraView: (view) => set({ cameraView: view }),
+    // ------------------------------------
+    
+    setRoom: (updates) =>
+    set((state) => ({
+    room: { ...state.room, ...updates },
+    })),
+    }))
+  </code>
+</pre>
+  </p>
+</body>
+
+</html>
